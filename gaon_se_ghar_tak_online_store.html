@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAON SE GHAR TAK | गाँव से घर तक - Pure Organic Village Store</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Noto Sans Devanagari -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for crisp UI & social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Devanagari', 'sans-serif'],
+                    },
+                    colors: {
+                        forest: {
+                            50: '#f2f7f4',
+                            100: '#dfece4',
+                            600: '#2d6a4f',
+                            700: '#1b4332',
+                            800: '#143325',
+                            900: '#0d2219',
+                        },
+                        terracotta: {
+                            50: '#fdf6f0',
+                            100: '#fae8d8',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                        },
+                        cream: '#faf7f2',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-cream text-stone-800 font-sans antialiased selection:bg-forest-700 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-forest-900 text-amber-100 text-xs sm:text-sm py-2 px-4 text-center font-medium">
+        <span class="inline-flex items-center gap-2">
+            <i class="fa-solid fa-seedling text-amber-400"></i>
+            <span>100% Pure, Traditional &amp; Organic Village Products Directly to Your Home</span>
+            <span class="hidden md:inline text-forest-100">|</span>
+            <a href="tel:7489030307" class="hidden md:inline-flex items-center gap-1 underline hover:text-white">
+                <i class="fa-solid fa-phone text-xs"></i> Order: 7489030307
+            </a>
+        </span>
+    </div>
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <!-- Brand Logo & Name -->
+                <a href="#" onclick="resetFilters(event)" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-forest-700 to-forest-900 flex items-center justify-center text-amber-300 shadow-md group-hover:scale-105 transition-transform">
+                        <!-- Custom Organic Wheat/Home SVG Emblem -->
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9.5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v4m0 0c-1.5 0-2.5-1-2.5-2.5M12 11c1.5 0 2.5-1 2.5-2.5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-forest-800 leading-none">
+                            GAON SE GHAR TAK
+                        </h1>
+                        <p class="text-xs font-semibold text-terracotta-600 mt-0.5">
+                            गाँव से घर तक • शुद्ध देशी उत्पाद
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Cart & Quick PhonePe Action -->
+                <div class="flex items-center gap-2 sm:gap-3 order-2 sm:order-3">
+                    <button onclick="copyPhonePe()" title="Copy PhonePe Number" class="hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-700 border border-terracotta-100 text-xs font-semibold transition">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <span>PhonePe: 7489030307</span>
+                    </button>
+
+                    <button onclick="toggleCart(true)" class="relative flex items-center gap-2.5 bg-forest-700 hover:bg-forest-800 active:scale-95 text-white px-4 py-2.5 rounded-2xl font-semibold text-sm shadow-md transition cursor-pointer">
+                        <i class="fa-solid fa-basket-shopping text-amber-300 text-base"></i>
+                        <span>Cart</span>
+                        <span id="headerCartCount" class="bg-amber-400 text-forest-900 text-xs font-extrabold px-2 py-0.5 rounded-full min-w-[22px] text-center">
+                            0
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Search Bar (Full width on mobile, centered on desktop) -->
+                <div class="w-full sm:w-auto sm:flex-1 max-w-xl order-3 sm:order-2">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm"></i>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            oninput="handleSearch()"
+                            placeholder="Search products in English or Hindi (e.g., Ragi, कोदो, Cookies, शहद)..."
+                            class="w-full pl-10 pr-10 py-2.5 bg-stone-100 hover:bg-stone-50 focus:bg-white border border-stone-200 focus:border-forest-600 rounded-2xl text-sm text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-forest-600/20 transition"
+                        >
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="bg-gradient-to-r from-forest-800 via-forest-700 to-forest-900 text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 relative z-10">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="max-w-2xl">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/30 text-amber-200 text-xs font-semibold mb-3">
+                        <i class="fa-solid fa-leaf"></i> 100% Chemical-Free &amp; Farm Fresh
+                    </span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                        Wholesome Village Goodness, Delivered <span class="text-amber-300">Gaon Se Ghar Tak</span>
+                    </h2>
+                    <p class="text-forest-100 text-sm sm:text-base mt-2.5 leading-relaxed">
+                        Handcrafted millet cookies, pure desi ghee laddoos, stone-ground flours, wild honey, and traditional grains sourced directly from rural producers.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3 shrink-0">
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-3.5 text-center min-w-[115px]">
+                        <div class="text-amber-300 font-extrabold text-xl">42+</div>
+                        <div class="text-xs text-forest-100 mt-0.5">Pure Products</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-3.5 text-center min-w-[115px]">
+                        <div class="text-amber-300 font-extrabold text-xl"><i class="fa-brands fa-whatsapp"></i> Easy</div>
+                        <div class="text-xs text-forest-100 mt-0.5">WhatsApp Order</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Catalog Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 w-full">
+
+        <!-- Category Filter Pills -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-stone-500">Shop by Category</h3>
+                <span id="productCountLabel" class="text-xs font-semibold text-forest-700 bg-forest-100 px-2.5 py-1 rounded-full">
+                    Showing 42 items
+                </span>
+            </div>
+            <div id="categoryFilters" class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <!-- Category buttons injected via JS -->
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Product cards injected via JS -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-stone-200 shadow-sm my-4">
+            <div class="w-16 h-16 rounded-full bg-amber-100 text-terracotta-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-lg font-bold text-stone-800">कोई उत्पाद नहीं मिला (No products found)</h3>
+            <p class="text-sm text-stone-500 mt-1 max-w-md mx-auto">
+                Try searching with a different spelling in Hindi or English, or reset your category filter.
+            </p>
+            <button onclick="resetFilters()" class="mt-5 px-5 py-2.5 bg-forest-700 hover:bg-forest-800 text-white text-sm font-semibold rounded-xl transition">
+                Show All 42 Products
+            </button>
+        </div>
+    </main>
+
+    <!-- Floating Bottom Cart Bar for Mobile -->
+    <div id="mobileFloatingCart" class="hidden fixed bottom-4 left-4 right-4 z-30 sm:hidden">
+        <button onclick="toggleCart(true)" class="w-full bg-forest-800 text-white px-5 py-3.5 rounded-2xl shadow-xl border border-forest-600 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span id="mobileCartQty" class="bg-amber-400 text-forest-900 font-extrabold text-xs px-2.5 py-1 rounded-lg">0 Items</span>
+                <span id="mobileCartTotal" class="font-bold text-base">₹0</span>
+            </div>
+            <span class="font-semibold text-sm flex items-center gap-1.5 text-amber-300">
+                View Cart &amp; Order <i class="fa-solid fa-arrow-right"></i>
+            </span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-forest-900 text-forest-100 border-t border-forest-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div>
+                    <div class="flex items-center gap-2.5 text-white font-extrabold text-xl">
+                        <i class="fa-solid fa-wheat-awn text-amber-400"></i>
+                        <span>GAON SE GHAR TAK</span>
+                    </div>
+                    <p class="text-sm text-forest-100/80 mt-2">
+                        Pure, Traditional &amp; Organic Village Products Directly to Your Home. Supporting rural artisans &amp; natural farming.
+                    </p>
+                </div>
+
+                <div class="bg-forest-800/80 border border-forest-700 rounded-2xl p-4">
+                    <div class="text-xs uppercase tracking-wider text-amber-300 font-bold mb-1">
+                        Direct Order &amp; PhonePe / UPI
+                    </div>
+                    <div class="text-xl font-extrabold text-white tracking-wide flex items-center justify-between">
+                        <span>+91 7489030307</span>
+                        <button onclick="copyPhonePe()" class="text-xs bg-white/10 hover:bg-white/20 text-amber-200 px-3 py-1.5 rounded-xl font-semibold transition">
+                            <i class="fa-regular fa-copy mr-1"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap md:justify-end gap-3">
+                    <a href="tel:7489030307" class="inline-flex items-center gap-2 px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition">
+                        <i class="fa-solid fa-phone text-amber-300"></i> Call Now
+                    </a>
+                    <a href="https://wa.me/917489030307?text=Hello%20GAON%20SE%20GHAR%20TAK!%20I%20would%20like%20to%20inquire%20about%20your%20organic%20products." target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg transition">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Us
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-forest-800 mt-8 pt-6 text-center text-xs text-forest-100/60">
+                &copy; 2026 GAON SE GHAR TAK (गाँव से घर तक). All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Slide-Over Shopping Cart & Checkout Drawer -->
+    <div id="cartDrawerBackdrop" onclick="toggleCart(false)" class="fixed inset-0 bg-stone-900/60 backdrop-blur-xs z-50 hidden transition-opacity"></div>
+
+    <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Drawer Header -->
+        <div class="px-5 py-4 bg-forest-800 text-white flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-basket-shopping text-amber-300 text-lg"></i>
+                <div>
+                    <h2 class="font-bold text-lg leading-tight">Your Shopping Basket</h2>
+                    <p class="text-xs text-forest-100">GAON SE GHAR TAK • Direct Order</p>
+                </div>
+            </div>
+            <button onclick="toggleCart(false)" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Scrollable Body -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-6">
+            <!-- Empty Cart View -->
+            <div id="emptyCartView" class="text-center py-12">
+                <div class="w-20 h-20 rounded-full bg-cream border border-stone-200 flex items-center justify-center mx-auto mb-4 text-3xl text-stone-400">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                </div>
+                <h3 class="text-lg font-bold text-stone-800">Your basket is empty</h3>
+                <p class="text-sm text-stone-500 mt-1 max-w-xs mx-auto">
+                    Add fresh millets, homemade cookies, laddoos, flours, or pure honey to start your order.
+                </p>
+                <button onclick="toggleCart(false)" class="mt-5 px-5 py-2.5 bg-forest-700 hover:bg-forest-800 text-white text-sm font-semibold rounded-xl transition">
+                    Browse Products
+                </button>
+            </div>
+
+            <!-- Cart Items & Checkout Form Container -->
+            <div id="populatedCartView" class="hidden space-y-6">
+                <!-- Added Items List -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-stone-500">Selected Items</h3>
+                        <button onclick="clearCart()" class="text-xs font-semibold text-red-600 hover:text-red-700">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Clear All
+                        </button>
+                    </div>
+                    <div id="cartItemsContainer" class="space-y-3">
+                        <!-- Cart items injected via JS -->
+                    </div>
+                </div>
+
+                <!-- Bill Summary Card -->
+                <div class="bg-cream border border-stone-200 rounded-2xl p-4 space-y-2">
+                    <div class="flex justify-between text-sm text-stone-600">
+                        <span>Total Items</span>
+                        <span id="summaryTotalQty" class="font-semibold text-stone-800">0</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-stone-600">
+                        <span>Packaging &amp; Handling</span>
+                        <span class="text-forest-700 font-semibold">Included</span>
+                    </div>
+                    <div class="border-t border-stone-200 pt-2.5 flex justify-between items-center">
+                        <span class="font-bold text-base text-stone-900">Grand Total</span>
+                        <span id="summaryGrandTotal" class="font-extrabold text-xl text-forest-800">₹0</span>
+                    </div>
+                </div>
+
+                <!-- Customer Details Form -->
+                <div class="bg-white border border-stone-200 rounded-2xl p-4 space-y-4 shadow-xs">
+                    <h3 class="text-sm font-bold text-forest-800 flex items-center gap-2 border-b border-stone-100 pb-2.5">
+                        <i class="fa-solid fa-truck-fast text-terracotta-600"></i> Delivery &amp; Payment Details
+                    </h3>
+
+                    <div>
+                        <label for="custName" class="block text-xs font-semibold text-stone-700 mb-1">Full Name (आपका नाम) *</label>
+                        <input type="text" id="custName" placeholder="Enter your full name" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-forest-600 focus:ring-2 focus:ring-forest-600/20 text-sm outline-none">
+                    </div>
+
+                    <div>
+                        <label for="custPhone" class="block text-xs font-semibold text-stone-700 mb-1">Mobile Number (मोबाइल नंबर) *</label>
+                        <input type="tel" id="custPhone" placeholder="e.g., 9876543210" class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-forest-600 focus:ring-2 focus:ring-forest-600/20 text-sm outline-none">
+                    </div>
+
+                    <div>
+                        <label for="custAddress" class="block text-xs font-semibold text-stone-700 mb-1">Complete Delivery Address (पूरा पता) *</label>
+                        <textarea id="custAddress" rows="2" placeholder="House/Street, Village/City, Pincode..." class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-forest-600 focus:ring-2 focus:ring-forest-600/20 text-sm outline-none"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-stone-700 mb-1.5">Payment Mode (भुगतान का माध्यम)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <label class="flex items-start gap-2.5 p-3 rounded-xl border border-stone-200 bg-stone-50 has-[:checked]:border-forest-600 has-[:checked]:bg-forest-50 cursor-pointer transition">
+                                <input type="radio" name="paymentMode" value="PhonePe / UPI (7489030307)" checked class="mt-0.5 accent-forest-700">
+                                <div>
+                                    <div class="text-xs font-bold text-stone-800">PhonePe / UPI</div>
+                                    <div class="text-[11px] text-stone-500">Pay to 7489030307</div>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-2.5 p-3 rounded-xl border border-stone-200 bg-stone-50 has-[:checked]:border-forest-600 has-[:checked]:bg-forest-50 cursor-pointer transition">
+                                <input type="radio" name="paymentMode" value="Cash on Delivery (COD)" class="mt-0.5 accent-forest-700">
+                                <div>
+                                    <div class="text-xs font-bold text-stone-800">Cash on Delivery</div>
+                                    <div class="text-[11px] text-stone-500">Pay on arrival</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer Actions -->
+        <div id="cartDrawerFooter" class="hidden p-4 bg-white border-t border-stone-200 space-y-2.5 shrink-0">
+            <button onclick="checkoutWhatsApp()" class="w-full py-3.5 px-5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base rounded-2xl shadow-lg flex items-center justify-center gap-2.5 transition cursor-pointer">
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span>Order on WhatsApp (7489030307)</span>
+            </button>
+            <button onclick="copyOrderSummary()" class="w-full py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 transition cursor-pointer">
+                <i class="fa-regular fa-clipboard"></i>
+                <span>Copy Order Summary</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Custom Toast Notification Box (Replaces alert()) -->
+    <div id="toastBox" class="fixed top-20 right-4 z-[60] transform translate-x-[120%] transition-transform duration-300 max-w-sm">
+        <div id="toastContent" class="bg-forest-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-forest-700 flex items-center gap-3 text-sm font-medium">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-amber-400 text-base"></i>
+            <span id="toastMessage">Notification</span>
+        </div>
+    </div>
+
+    <!-- Hidden textarea for reliable clipboard copy inside iframes -->
+    <textarea id="clipboardHelper" class="sr-only" aria-hidden="true"></textarea>
+
+    <script>
+        // Complete Catalog of 42 Unique Products with Updated Doubled Prices
+        const PRODUCTS = [
+            // Millets & Grains (8 items)
+            { id: 1, nameHi: "कोदो चावल", nameEn: "Kodo Rice", weight: "500 g", price: 140, category: "Millets & Grains" },
+            { id: 2, nameHi: "कुटकी चावल", nameEn: "Kutki Rice", weight: "500 g", price: 160, category: "Millets & Grains" },
+            { id: 3, nameHi: "रागी", nameEn: "Ragi / Finger Millet", weight: "500 g", price: 80, category: "Millets & Grains" },
+            { id: 4, nameHi: "कंगनी", nameEn: "Kangni / Foxtail Millet", weight: "500 g", price: 250, category: "Millets & Grains" },
+            { id: 5, nameHi: "सांवा", nameEn: "Sanwa / Barnyard Millet", weight: "500 g", price: 200, category: "Millets & Grains" },
+            { id: 6, nameHi: "कुलथी", nameEn: "Kulthi / Horse Gram", weight: "500 g", price: 160, category: "Millets & Grains" },
+            { id: 7, nameHi: "ज्वार", nameEn: "Jowar / Sorghum", weight: "500 g", price: 80, category: "Millets & Grains" },
+            { id: 8, nameHi: "बाजरा", nameEn: "Bajra / Pearl Millet", weight: "500 g", price: 80, category: "Millets & Grains" },
+
+            // Cookies (16 items)
+            { id: 9, nameHi: "घी मुनगा कुटकी कुकीज", nameEn: "Ghee Moringa Kutki Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 10, nameHi: "घी गुड़ कोदो कुकीज", nameEn: "Ghee Jaggery Kodo Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 11, nameHi: "घी गुड़ कुटकी कुकीज", nameEn: "Ghee Jaggery Kutki Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 12, nameHi: "कोदो घी गुड़ महुआ कुकीज", nameEn: "Kodo Ghee Jaggery Mahua Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 13, nameHi: "तुलसी घी गुड़ कोदो कुकीज", nameEn: "Tulsi Ghee Jaggery Kodo Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 14, nameHi: "घी गुड़ रागी कुकीज", nameEn: "Ghee Jaggery Ragi Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 15, nameHi: "घी गुड़ सावां कुकीज", nameEn: "Ghee Jaggery Sanwa Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 16, nameHi: "घी गुड़ ज्वार कुकीज", nameEn: "Ghee Jaggery Jowar Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 17, nameHi: "घी गुड़ बाजरा कुकीज", nameEn: "Ghee Jaggery Bajra Cookies", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 18, nameHi: "घी कोदो कुकीज शुगर फ्री", nameEn: "Ghee Kodo Cookies Sugar Free", weight: "250 g", price: 300, category: "Cookies" },
+            { id: 19, nameHi: "कोदो गुड़ अलसी कुकीज", nameEn: "Kodo Jaggery Flaxseed Cookies", weight: "250 g", price: 240, category: "Cookies" },
+            { id: 20, nameHi: "कोदो गुड़ कुकीज", nameEn: "Kodo Jaggery Cookies", weight: "250 g", price: 200, category: "Cookies" },
+            { id: 21, nameHi: "कुटकी गुड़ कुकीज", nameEn: "Kutki Jaggery Cookies", weight: "251 g", price: 200, category: "Cookies" },
+            { id: 22, nameHi: "कुटकी नमकीन कुकीज", nameEn: "Kutki Salted Cookies", weight: "250 g", price: 200, category: "Cookies" },
+            { id: 23, nameHi: "मिलेट कुकीज", nameEn: "Millet Cookies", weight: "1 Kg", price: 240, category: "Cookies" },
+            { id: 24, nameHi: "मिलेट गुड़ कुकीज", nameEn: "Millet Jaggery Cookies", weight: "1 Kg", price: 300, category: "Cookies" },
+
+            // Laddoos & Seeds (6 items)
+            { id: 25, nameHi: "कोदो घी गुड़ लड्डू", nameEn: "Kodo Ghee Jaggery Laddoo", weight: "250 g", price: 300, category: "Laddoos & Seeds" },
+            { id: 26, nameHi: "कुटकी घी लड्डू", nameEn: "Kutki Ghee Laddoo", weight: "250 g", price: 300, category: "Laddoos & Seeds" },
+            { id: 27, nameHi: "रागी घी लड्डू", nameEn: "Ragi Ghee Laddoo", weight: "250 g", price: 300, category: "Laddoos & Seeds" },
+            { id: 28, nameHi: "महुआ लड्डू", nameEn: "Mahua Laddoo", weight: "250 g", price: 300, category: "Laddoos & Seeds" },
+            { id: 29, nameHi: "अलसी लड्डू", nameEn: "Alsi / Flaxseed Laddoo", weight: "250 g", price: 250, category: "Laddoos & Seeds" },
+            { id: 30, nameHi: "रोस्टेड अलसी", nameEn: "Roasted Alsi / Flaxseeds", weight: "200 g", price: 80, category: "Laddoos & Seeds" },
+
+            // Honey & Jaggery (2 items)
+            { id: 31, nameHi: "शहद", nameEn: "Pure Honey", weight: "700 g", price: 560, category: "Honey & Jaggery" },
+            { id: 32, nameHi: "गुड़", nameEn: "Organic Jaggery", weight: "500 g", price: 100, category: "Honey & Jaggery" },
+
+            // Flours & Daliya (10 items)
+            { id: 33, nameHi: "कुटकी आटा", nameEn: "Kutki Flour", weight: "500 g", price: 160, category: "Flours & Daliya" },
+            { id: 34, nameHi: "कोदो आटा", nameEn: "Kodo Flour", weight: "500 g", price: 140, category: "Flours & Daliya" },
+            { id: 35, nameHi: "रागी आटा", nameEn: "Ragi Flour", weight: "500 g", price: 120, category: "Flours & Daliya" },
+            { id: 36, nameHi: "रागी दलिया", nameEn: "Ragi Daliya", weight: "500 g", price: 100, category: "Flours & Daliya" },
+            { id: 37, nameHi: "मक्का आटा", nameEn: "Maize / Makka Flour", weight: "500 g", price: 50, category: "Flours & Daliya" },
+            { id: 38, nameHi: "गेहूं आटा", nameEn: "Wheat Flour", weight: "500 g", price: 40, category: "Flours & Daliya" },
+            { id: 39, nameHi: "मक्का दलिया", nameEn: "Maize / Makka Daliya", weight: "500 g", price: 50, category: "Flours & Daliya" },
+            { id: 40, nameHi: "गेहूं दलिया", nameEn: "Wheat Daliya", weight: "500 g", price: 40, category: "Flours & Daliya" },
+            { id: 41, nameHi: "ज्वार आटा", nameEn: "Jowar Flour", weight: "500 g", price: 100, category: "Flours & Daliya" },
+            { id: 42, nameHi: "बाजरा आटा", nameEn: "Bajra Flour", weight: "500 g", price: 100, category: "Flours & Daliya" }
+        ];
+
+        const CATEGORIES = [
+            { id: "All", labelEn: "All", labelHi: "सभी", icon: "fa-border-all" },
+            { id: "Millets & Grains", labelEn: "Millets & Grains", labelHi: "अनाज", icon: "fa-wheat-awn" },
+            { id: "Cookies", labelEn: "Cookies", labelHi: "कुकीज", icon: "fa-cookie-bite" },
+            { id: "Laddoos & Seeds", labelEn: "Laddoos & Seeds", labelHi: "लड्डू और अलसी", icon: "fa-sun" },
+            { id: "Flours & Daliya", labelEn: "Flours & Daliya", labelHi: "आटा और दलिया", icon: "fa-bowl-rice" },
+            { id: "Honey & Jaggery", labelEn: "Honey & Jaggery", labelHi: "शहद और गुड़", icon: "fa-jar" }
+        ];
+
+        const CATEGORY_STYLES = {
+            "Millets & Grains": {
+                badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
+                cardAccent: "from-emerald-50 to-teal-50/40",
+                iconColor: "text-emerald-700",
+                icon: "fa-wheat-awn"
+            },
+            "Cookies": {
+                badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
+                cardAccent: "from-amber-50 to-orange-50/40",
+                iconColor: "text-amber-700",
+                icon: "fa-cookie-bite"
+            },
+            "Laddoos & Seeds": {
+                badgeBg: "bg-orange-50 text-orange-800 border-orange-200",
+                cardAccent: "from-orange-50 to-amber-50/40",
+                iconColor: "text-orange-700",
+                icon: "fa-sun"
+            },
+            "Flours & Daliya": {
+                badgeBg: "bg-stone-100 text-stone-700 border-stone-300",
+                cardAccent: "from-stone-100 to-amber-50/30",
+                iconColor: "text-stone-700",
+                icon: "fa-bowl-rice"
+            },
+            "Honey & Jaggery": {
+                badgeBg: "bg-yellow-50 text-yellow-800 border-yellow-300",
+                cardAccent: "from-yellow-50 to-amber-50/50",
+                iconColor: "text-yellow-700",
+                icon: "fa-jar"
+            }
+        };
+
+        // Application State
+        let activeCategory = "All";
+        let searchQuery = "";
+        let cart = {}; // { [productId]: quantity }
+        let toastTimeout = null;
+
+        // Initialize Storefront
+        function initStore() {
+            loadSavedCart();
+            renderCategoryPills();
+            renderProducts();
+            updateCartUI();
+        }
+
+        // Persist cart in localStorage safely
+        function loadSavedCart() {
+            try {
+                const saved = localStorage.getItem("gsgt_cart_v1");
+                if (saved) cart = JSON.parse(saved);
+            } catch (e) {
+                cart = {};
+            }
+        }
+
+        function saveCart() {
+            try {
+                localStorage.setItem("gsgt_cart_v1", JSON.stringify(cart));
+            } catch (e) {}
+        }
+
+        // Render Category Filter Pills
+        function renderCategoryPills() {
+            const container = document.getElementById("categoryFilters");
+            container.innerHTML = CATEGORIES.map(cat => {
+                const isActive = activeCategory === cat.id;
+                const activeClasses = isActive
+                    ? "bg-forest-700 text-white border-forest-700 shadow-sm"
+                    : "bg-white hover:bg-stone-100 text-stone-700 border-stone-200";
+                return `
+                    <button
+                        onclick="selectCategory('${cat.id}')"
+                        class="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs sm:text-sm font-semibold transition cursor-pointer ${activeClasses}"
+                    >
+                        <i class="fa-solid ${cat.icon} ${isActive ? 'text-amber-300' : 'text-forest-600'}"></i>
+                        <span>${cat.labelEn}</span>
+                        <span class="opacity-80 font-normal">(${cat.labelHi})</span>
+                    </button>
+                `;
+            }).join("");
+        }
+
+        function selectCategory(categoryId) {
+            activeCategory = categoryId;
+            renderCategoryPills();
+            renderProducts();
+        }
+
+        function handleSearch() {
+            const input = document.getElementById("searchInput");
+            const clearBtn = document.getElementById("clearSearchBtn");
+            searchQuery = input.value.trim().toLowerCase();
+            if (searchQuery.length > 0) {
+                clearBtn.classList.remove("hidden");
+            } else {
+                clearBtn.classList.add("hidden");
+            }
+            renderProducts();
+        }
+
+        function clearSearch() {
+            document.getElementById("searchInput").value = "";
+            searchQuery = "";
+            document.getElementById("clearSearchBtn").classList.add("hidden");
+            renderProducts();
+        }
+
+        function resetFilters(e) {
+            if (e) e.preventDefault();
+            activeCategory = "All";
+            clearSearch();
+            renderCategoryPills();
+            renderProducts();
+        }
+
+        // Filter & Render Product Cards
+        function renderProducts() {
+            const grid = document.getElementById("productGrid");
+            const emptyState = document.getElementById("emptyState");
+            const countLabel = document.getElementById("productCountLabel");
+
+            const filtered = PRODUCTS.filter(p => {
+                const matchesCat = activeCategory === "All" || p.category === activeCategory;
+                const matchesSearch = !searchQuery ||
+                    p.nameHi.toLowerCase().includes(searchQuery) ||
+                    p.nameEn.toLowerCase().includes(searchQuery) ||
+                    p.category.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            countLabel.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? 'item' : 'items'}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            grid.innerHTML = filtered.map(product => {
+                const style = CATEGORY_STYLES[product.category] || CATEGORY_STYLES["Millets & Grains"];
+                const qty = cart[product.id] || 0;
+
+                const actionControl = qty === 0
+                    ? `<button onclick="addToCart(${product.id})" class="w-full py-2.5 px-4 rounded-xl bg-forest-700 hover:bg-forest-800 active:scale-95 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
+                        <i class="fa-solid fa-cart-plus text-amber-300"></i>
+                        <span>Add to Cart</span>
+                       </button>`
+                    : `<div class="w-full flex items-center justify-between bg-forest-50 border border-forest-600 rounded-xl p-1">
+                        <button onclick="updateQty(${product.id}, -1)" aria-label="Decrease quantity" class="w-9 h-8 rounded-lg bg-white hover:bg-forest-100 text-forest-800 font-bold flex items-center justify-center shadow-2xs transition cursor-pointer">
+                            <i class="fa-solid fa-minus text-xs"></i>
+                        </button>
+                        <span class="font-extrabold text-forest-900 text-sm px-3">${qty} in cart</span>
+                        <button onclick="updateQty(${product.id}, 1)" aria-label="Increase quantity" class="w-9 h-8 rounded-lg bg-forest-700 hover:bg-forest-800 text-white font-bold flex items-center justify-center shadow-2xs transition cursor-pointer">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
+                       </div>`;
+
+                return `
+                    <article class="bg-white rounded-3xl border border-stone-200/90 shadow-xs hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
+                        <div>
+                            <!-- Visual Category Header -->
+                            <div class="bg-gradient-to-br ${style.cardAccent} px-4 pt-4 pb-3 border-b border-stone-100 flex items-center justify-between">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${style.badgeBg}">
+                                    <i class="fa-solid ${style.icon}"></i>
+                                    ${product.category}
+                                </span>
+                                <span class="text-xs font-bold text-stone-600 bg-white/90 px-2.5 py-1 rounded-lg border border-stone-200/80 shadow-2xs">
+                                    ${product.weight}
+                                </span>
+                            </div>
+
+                            <!-- Product Titles -->
+                            <div class="p-4 pb-2">
+                                <h4 class="text-base sm:text-lg font-bold text-stone-900 leading-snug group-hover:text-forest-800 transition-colors">
+                                    ${product.nameHi}
+                                </h4>
+                                <p class="text-xs sm:text-sm font-medium text-stone-500 mt-0.5">
+                                    ${product.nameEn}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Price & Cart Action -->
+                        <div class="p-4 pt-2 mt-auto">
+                            <div class="flex items-baseline justify-between mb-3">
+                                <div>
+                                    <span class="text-xl font-extrabold text-forest-800">₹${product.price}</span>
+                                    <span class="text-xs text-stone-400 ml-1">/ ${product.weight}</span>
+                                </div>
+                                <span class="text-[11px] font-semibold text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded-md">
+                                    Pure Organic
+                                </span>
+                            </div>
+                            ${actionControl}
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        // Cart Operations
+        function addToCart(productId) {
+            cart[productId] = (cart[productId] || 0) + 1;
+            saveCart();
+            renderProducts();
+            updateCartUI();
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (product) {
+                showToast(`Added "${product.nameEn}" to basket`);
+            }
+        }
+
+        function updateQty(productId, delta) {
+            if (!cart[productId]) return;
+            cart[productId] += delta;
+            if (cart[productId] <= 0) {
+                delete cart[productId];
+            }
+            saveCart();
+            renderProducts();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = {};
+            saveCart();
+            renderProducts();
+            updateCartUI();
+            showToast("Shopping basket cleared");
+        }
+
+        // Update Header Badges, Mobile Floating Bar & Drawer Content
+        function updateCartUI() {
+            const entries = Object.entries(cart);
+            let totalQty = 0;
+            let grandTotal = 0;
+
+            const itemsHtml = entries.map(([idStr, qty]) => {
+                const product = PRODUCTS.find(p => p.id === Number(idStr));
+                if (!product) return "";
+                const subtotal = product.price * qty;
+                totalQty += qty;
+                grandTotal += subtotal;
+
+                return `
+                    <div class="flex items-center justify-between gap-3 p-3 bg-stone-50 border border-stone-200/80 rounded-2xl">
+                        <div class="min-w-0 flex-1">
+                            <div class="font-bold text-sm text-stone-900 truncate">${product.nameHi}</div>
+                            <div class="text-xs text-stone-500 truncate">${product.nameEn} • ${product.weight}</div>
+                            <div class="text-xs font-bold text-forest-700 mt-1">₹${product.price} × ${qty} = ₹${subtotal}</div>
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-white border border-stone-200 rounded-xl p-1 shrink-0">
+                            <button onclick="updateQty(${product.id}, -1)" class="w-7 h-7 rounded-lg hover:bg-stone-100 text-stone-700 flex items-center justify-center font-bold cursor-pointer">
+                                <i class="fa-solid fa-minus text-[10px]"></i>
+                            </button>
+                            <span class="w-6 text-center text-xs font-extrabold text-stone-900">${qty}</span>
+                            <button onclick="updateQty(${product.id}, 1)" class="w-7 h-7 rounded-lg bg-forest-700 text-white flex items-center justify-center font-bold cursor-pointer">
+                                <i class="fa-solid fa-plus text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            // Update Badges
+            document.getElementById("headerCartCount").textContent = totalQty;
+            document.getElementById("mobileCartQty").textContent = `${totalQty} ${totalQty === 1 ? 'Item' : 'Items'}`;
+            document.getElementById("mobileCartTotal").textContent = `₹${grandTotal}`;
+            document.getElementById("summaryTotalQty").textContent = totalQty;
+            document.getElementById("summaryGrandTotal").textContent = `₹${grandTotal}`;
+
+            const mobileBar = document.getElementById("mobileFloatingCart");
+            const emptyView = document.getElementById("emptyCartView");
+            const populatedView = document.getElementById("populatedCartView");
+            const drawerFooter = document.getElementById("cartDrawerFooter");
+
+            if (totalQty > 0) {
+                mobileBar.classList.remove("hidden");
+                emptyView.classList.add("hidden");
+                populatedView.classList.remove("hidden");
+                drawerFooter.classList.remove("hidden");
+                document.getElementById("cartItemsContainer").innerHTML = itemsHtml;
+            } else {
+                mobileBar.classList.add("hidden");
+                emptyView.classList.remove("hidden");
+                populatedView.classList.add("hidden");
+                drawerFooter.classList.add("hidden");
+            }
+        }
+
+        // Slide-over Drawer Control
+        function toggleCart(open) {
+            const backdrop = document.getElementById("cartDrawerBackdrop");
+            const drawer = document.getElementById("cartDrawer");
+            if (open) {
+                backdrop.classList.remove("hidden");
+                requestAnimationFrame(() => {
+                    drawer.classList.remove("translate-x-full");
+                });
+                document.body.style.overflow = "hidden";
+            } else {
+                drawer.classList.add("translate-x-full");
+                setTimeout(() => {
+                    backdrop.classList.add("hidden");
+                }, 280);
+                document.body.style.overflow = "";
+            }
+        }
+
+        // Build Formatted Order Bill String
+        function buildOrderMessage() {
+            const entries = Object.entries(cart);
+            if (entries.length === 0) return null;
+
+            const name = document.getElementById("custName").value.trim();
+            const phone = document.getElementById("custPhone").value.trim();
+            const address = document.getElementById("custAddress").value.trim();
+            const paymentInput = document.querySelector('input[name="paymentMode"]:checked');
+            const paymentMode = paymentInput ? paymentInput.value : "PhonePe / UPI (7489030307)";
+
+            let grandTotal = 0;
+            let lines = [];
+            lines.push("*🌿 NEW ORDER - GAON SE GHAR TAK 🌿*");
+            lines.push("--------------------------------");
+
+            entries.forEach(([idStr, qty], idx) => {
+                const p = PRODUCTS.find(item => item.id === Number(idStr));
+                if (p) {
+                    const sub = p.price * qty;
+                    grandTotal += sub;
+                    lines.push(`${idx + 1}. *${p.nameHi}* (${p.nameEn})`);
+                    lines.push(`   Pack: ${p.weight} | Qty: ${qty} × ₹${p.price} = *₹${sub}*`);
+                }
+            });
+
+            lines.push("--------------------------------");
+            lines.push(`*GRAND TOTAL: ₹${grandTotal}*`);
+            lines.push("--------------------------------");
+            lines.push("*Customer Details:*");
+            lines.push(`• Name: ${name || "Not provided"}`);
+            lines.push(`• Mobile: ${phone || "Not provided"}`);
+            lines.push(`• Address: ${address || "Not provided"}`);
+            lines.push(`• Payment Mode: ${paymentMode}`);
+            lines.push("--------------------------------");
+            lines.push("Thank you for ordering from GAON SE GHAR TAK!");
+
+            return lines.join("\n");
+        }
+
+        // Validate & Launch WhatsApp Checkout
+        function checkoutWhatsApp() {
+            const name = document.getElementById("custName").value.trim();
+            const phone = document.getElementById("custPhone").value.trim();
+            const address = document.getElementById("custAddress").value.trim();
+
+            if (!name || !phone || !address) {
+                showToast("Please fill in your Name, Mobile, and Address first.", true);
+                if (!name) document.getElementById("custName").focus();
+                else if (!phone) document.getElementById("custPhone").focus();
+                else document.getElementById("custAddress").focus();
+                return;
+            }
+
+            const message = buildOrderMessage();
+            if (!message) return;
+
+            const encodedText = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/917489030307?text=${encodedText}`;
+            window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+        }
+
+        // Copy Order Summary using document.execCommand('copy')
+        function copyOrderSummary() {
+            const message = buildOrderMessage();
+            if (!message) return;
+            copyTextToClipboard(message, "Order summary copied to clipboard!");
+        }
+
+        function copyPhonePe() {
+            copyTextToClipboard("7489030307", "PhonePe number 7489030307 copied!");
+        }
+
+        function copyTextToClipboard(text, successMsg) {
+            const helper = document.getElementById("clipboardHelper");
+            helper.value = text;
+            helper.select();
+            helper.setSelectionRange(0, 99999);
+            try {
+                document.execCommand("copy");
+                showToast(successMsg);
+            } catch (err) {
+                showToast("Unable to copy automatically.", true);
+            }
+        }
+
+        // Non-blocking Toast Banner
+        function showToast(message, isWarning = false) {
+            const box = document.getElementById("toastBox");
+            const content = document.getElementById("toastContent");
+            const icon = document.getElementById("toastIcon");
+            const msgEl = document.getElementById("toastMessage");
+
+            msgEl.textContent = message;
+            if (isWarning) {
+                content.className = "bg-terracotta-700 text-white px-4 py-3 rounded-2xl shadow-xl border border-terracotta-500 flex items-center gap-3 text-sm font-medium";
+                icon.className = "fa-solid fa-circle-exclamation text-amber-200 text-base";
+            } else {
+                content.className = "bg-forest-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-forest-700 flex items-center gap-3 text-sm font-medium";
+                icon.className = "fa-solid fa-circle-check text-amber-400 text-base";
+            }
+
+            box.classList.remove("translate-x-[120%]");
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.add("translate-x-[120%]");
+            }, 3000);
+        }
+
+        // Boot up on load
+        window.addEventListener("DOMContentLoaded", initStore);
+    </script>
+</body>
+</html>
